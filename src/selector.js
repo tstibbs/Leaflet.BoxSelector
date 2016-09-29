@@ -1,20 +1,53 @@
-L.Map.mergeOptions({
-	boxSelector: true
-});
-
-L.Map.BoxSelector = L.Handler.extend({
+L.Map.BoxSelector = L.Control.extend({
 	initialize: function (map) {
+	},
+	
+	onAdd: function (map) {
 		this._map = map;
-		this._container = map._container;
+		this._mapcontainer = map._container;
 		this._pane = map._panes.overlayPane;
+		this._addHooks();
+		
+		//set up icon
+		var container = L.DomUtil.create('div', 'leaflet-control-box-selector leaflet-bar leaflet-control');
+		this._toggle = L.DomUtil.create('input', 'leaflet-bar-part leaflet-bar-part-single', container);
+		this._toggle.type = 'checkbox';
+		this._toggle.selected = false;
+		this._toggle.value = false;
+		var label = L.DomUtil.create('span', null, container);
+		label.innerHTML = 'Selection enabled';
+
+		//
+		L.DomEvent.on(this._toggle, 'click', this._onInputClick, this);
+
+		//ensure we tear down		
+		this._map.on('unload', this._removeHooks, this);
+		
+		return container;
 	},
 
-	addHooks: function () {
-		L.DomEvent.on(this._container, 'mousedown', this._onMouseDown, this);
+	_addHooks: function () {
+		L.DomEvent.on(this._mapcontainer, 'mousedown', this._onMouseDown, this);
 	},
 
-	removeHooks: function () {
-		L.DomEvent.off(this._container, 'mousedown', this._onMouseDown, this);
+	_removeHooks: function () {
+		L.DomEvent.off(this._mapcontainer, 'mousedown', this._onMouseDown, this);
+	},
+
+	_onInputClick: function() {
+		if (this._isEnabled()) {
+			map.dragging.disable();
+		} else {
+			map.dragging.enable();
+		}
+	},
+	
+	_isEnabled: function() {
+		return this._toggle.checked;
+	},
+	
+	_setEnabled: function(enabled) {
+		this._toggle.checked = enabled;
 	},
 
 	moved: function () {
@@ -26,7 +59,12 @@ L.Map.BoxSelector = L.Handler.extend({
 	},
 
 	_onMouseDown: function (e) {
-		if (!e.shiftKey || ((e.which !== 1) && (e.button !== 1))) { return false; }
+		if (!this._isEnabled() || (e.button !== 0)) {
+			console.log("drag");
+			return false;
+		} else {
+			console.log("selection");
+		}
 
 		this._resetState();
 
@@ -47,8 +85,8 @@ L.Map.BoxSelector = L.Handler.extend({
 		if (!this._moved) {
 			this._moved = true;
 
-			this._box = L.DomUtil.create('div', 'leaflet-zoom-box', this._container);
-			L.DomUtil.addClass(this._container, 'leaflet-crosshair');
+			this._box = L.DomUtil.create('div', 'leaflet-zoom-box', this._mapcontainer);
+			L.DomUtil.addClass(this._mapcontainer, 'leaflet-crosshair');
 		}
 
 		this._point = this._map.mouseEventToContainerPoint(e);
@@ -65,7 +103,7 @@ L.Map.BoxSelector = L.Handler.extend({
 	_finish: function () {
 		if (this._moved) {
 			L.DomUtil.remove(this._box);
-			L.DomUtil.removeClass(this._container, 'leaflet-crosshair');
+			L.DomUtil.removeClass(this._mapcontainer, 'leaflet-crosshair');
 		}
 
 		L.DomUtil.enableTextSelection();
@@ -129,5 +167,3 @@ L.Map.BoxSelector = L.Handler.extend({
 		}
 	}
 });
-
-L.Map.addInitHook('addHandler', 'boxSelector', L.Map.BoxSelector);

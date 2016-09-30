@@ -22,8 +22,7 @@ markers.forEach(function(element) {
 var map = L.map('map', {
 	center: [51.515, -0.13],
 	zoom: 13,
-	layers: [/*streets,*/ group],
-	boxZoom: false
+	layers: [/*streets,*/ group]
 });
 
 (new L.Map.BoxSelector()).addTo(map);

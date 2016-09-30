@@ -9,16 +9,10 @@ L.Map.BoxSelector = L.Control.extend({
 		this._addHooks();
 		
 		//set up icon
-		var container = L.DomUtil.create('div', 'leaflet-control-box-selector leaflet-bar leaflet-control');
-		this._toggle = L.DomUtil.create('input', 'leaflet-bar-part leaflet-bar-part-single', container);
-		this._toggle.type = 'checkbox';
-		this._toggle.selected = false;
-		this._toggle.value = false;
-		var label = L.DomUtil.create('span', null, container);
-		label.innerHTML = 'Selection enabled';
-
-		//
-		L.DomEvent.on(this._toggle, 'click', this._onInputClick, this);
+		var container = L.DomUtil.create('div', 'leaflet-control-box-selector leaflet-bar leaflet-control box-selector-icon');
+		this._toggleElement = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', container);
+		this._toggleElement.href = '#';
+		L.DomEvent.on(this._toggleElement, 'click', this._toggle, this);
 
 		//ensure we tear down		
 		this._map.on('unload', this._removeHooks, this);
@@ -34,20 +28,25 @@ L.Map.BoxSelector = L.Control.extend({
 		L.DomEvent.off(this._mapcontainer, 'mousedown', this._onMouseDown, this);
 	},
 
-	_onInputClick: function() {
+	_toggle: function() {
+		//toggle state
+		this._setEnabled(!this._isEnabled());
+		//update draggability
 		if (this._isEnabled()) {
 			map.dragging.disable();
+			L.DomUtil.addClass(this._toggleElement, 'enabled');
 		} else {
 			map.dragging.enable();
+			L.DomUtil.removeClass(this._toggleElement, 'enabled');
 		}
 	},
 	
 	_isEnabled: function() {
-		return this._toggle.checked;
+		return this._selectionEnabled;
 	},
 	
 	_setEnabled: function(enabled) {
-		this._toggle.checked = enabled;
+		this._selectionEnabled = enabled;
 	},
 
 	moved: function () {

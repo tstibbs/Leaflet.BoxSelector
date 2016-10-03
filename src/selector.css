@@ -17,3 +17,15 @@
 .box-selector-control .enabled .icon {
 	background-color: #38f;
 }
+
+.boxselector-dropdown {
+    position: absolute;
+}
+
+.boxselector-dropdown-expanded {
+  display: visible; 
+}
+
+.boxselector-dropdown-hidden {
+  display: none; 
+}

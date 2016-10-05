@@ -193,15 +193,15 @@ L.Map.BoxSelector = L.Control.extend({
 		console.log(this.getSelectedMarkers());
 	},
 
-	_enumerateMarkers: function(bounds, layers, action) {
+	_enumerateMarkers: function(bounds, layers, callback) {
 		Object.keys(layers).forEach(function (key) {
 			var layer = layers[key];
 			if (layer instanceof L.Marker) {
 				if (bounds.contains(layer.getLatLng())) {
-					action(layer);
+					callback(layer);
 				}
 			} else if (layer._layers != undefined) {
-				this._enumerateMarkers(bounds, layer._layers, action);
+				this._enumerateMarkers(bounds, layer._layers, callback);
 			}
 		}, this);
 	},

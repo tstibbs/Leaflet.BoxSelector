@@ -49,8 +49,6 @@ L.Map.BoxSelector = L.Handler.extend({
 
 			this._box = L.DomUtil.create('div', 'leaflet-zoom-box', this._container);
 			L.DomUtil.addClass(this._container, 'leaflet-crosshair');
-
-			this._map.fire('boxzoomstart');
 		}
 
 		this._point = this._map.mouseEventToContainerPoint(e);
@@ -95,9 +93,6 @@ L.Map.BoxSelector = L.Handler.extend({
 		        this._map.containerPointToLatLng(this._startPoint),
 		        this._map.containerPointToLatLng(this._point));
 
-		this._map
-			.fitBounds(bounds)
-			.fire('boxzoomend', {boxZoomBounds: bounds});
 	},
 
 	_onKeyDown: function (e) {

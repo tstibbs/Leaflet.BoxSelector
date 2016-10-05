@@ -93,6 +93,34 @@ L.Map.BoxSelector = L.Handler.extend({
 		        this._map.containerPointToLatLng(this._startPoint),
 		        this._map.containerPointToLatLng(this._point));
 
+		this._enumerateMarkers(bounds, map._layers, function(marker) {
+			if (this._allSelectedMarkers == null) {
+				this._allSelectedMarkers = {};
+			}
+			var key = L.Util.stamp(marker);
+			this._allSelectedMarkers[key] = marker; //may already be there, but just override it
+		}.bind(this));
+		console.log(this.getSelectedMarkers());
+	},
+
+	_enumerateMarkers: function(bounds, layers, action) {
+		Object.keys(layers).forEach(function (key) {
+			var layer = layers[key];
+			if (layer instanceof L.Marker) {
+				if (bounds.contains(layer.getLatLng())) {
+					action(layer);
+				}
+			} else if (layer._layers != undefined) {
+				this._enumerateMarkers(bounds, layer._layers, action);
+			}
+		}, this);
+	},
+
+	getSelectedMarkers: function() {
+		var markers = Object.keys(this._allSelectedMarkers).sort().map(function(markerId) { //sort is just so the order is predictable, makes debugging easier
+			return this._allSelectedMarkers[markerId];
+		}.bind(this));
+		return markers;
 	},
 
 	_onKeyDown: function (e) {

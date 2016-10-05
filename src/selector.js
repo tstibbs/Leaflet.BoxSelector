@@ -32,15 +32,16 @@ L.Map.BoxSelector = L.Control.extend({
 	},
 
 	_toggle: function() {
-		//toggle state
 		this._setEnabled(!this._isEnabled());
-		//update draggability
 		if (this._isEnabled()) {
+			//enable selection
 			map.dragging.disable();
 			L.DomUtil.addClass(this._toggleElement, 'enabled');
 		} else {
+			//disable selection
 			map.dragging.enable();
 			L.DomUtil.removeClass(this._toggleElement, 'enabled');
+			this._allSelectedMarkers = {};//clear our existing selection
 		}
 	},
 	
@@ -62,10 +63,7 @@ L.Map.BoxSelector = L.Control.extend({
 
 	_onMouseDown: function (e) {
 		if (!this._isEnabled() || (e.button !== 0)) {
-			console.log("drag");
 			return false;
-		} else {
-			console.log("selection");
 		}
 
 		this._resetState();

@@ -23,8 +23,8 @@ L.Map.BoxSelector = L.Control.extend({
 		this._addHooks();
 		
 		//set up select icon
-		var container = L.DomUtil.create('div', 'leaflet-control-box-selector leaflet-bar leaflet-control box-selector-control');
-		this._toggleElement = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', container);
+		var container = L.DomUtil.create('div', 'leaflet-control-box-selector leaflet-bar leaflet-control boxselector-control');
+		this._toggleElement = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single boxselector-icon', container);
 		this._toggleElement.href = '#';
 		var iconWrapper = L.DomUtil.create('div', 'icon-wrapper', this._toggleElement);
 		var icon = L.DomUtil.create('div', 'icon', iconWrapper);

@@ -1,4 +1,8 @@
-.box-selector-control .icon-wrapper {
+.boxselector-dropdown-button, a.boxselector-icon {
+	display: inline-block !important; /* TODO work out what was up here and remove the important */
+}
+
+.boxselector-control .icon-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,7 +10,7 @@
     height: 100%;
 }
 
-.box-selector-control .icon {
+.boxselector-control .icon {
 	width: 60%;
 	height: 60%;
 	border-style: dashed;
@@ -14,7 +18,7 @@
 	border-width: 1px;
 }
 
-.box-selector-control .enabled .icon {
+.boxselector-control .enabled .icon {
 	background-color: #38f;
 }
 
@@ -23,9 +27,9 @@
 }
 
 .boxselector-dropdown-expanded {
-  display: visible; 
+	display: visible; 
 }
 
 .boxselector-dropdown-hidden {
-  display: none; 
+	display: none; 
 }

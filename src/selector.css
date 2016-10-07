@@ -57,16 +57,8 @@
     height: 100%;
 }
 
-.boxselector-control .icon {
-	width: 60%;
-	height: 60%;
-	border-style: dashed;
-	border-radius: 5px;
-	border-width: 1px;
-}
-
-.boxselector-control .enabled .icon {
-	background-color: #38f;
+.boxselector-control .enabled .icon-wrapper {
+	background-color: #94CAFF;
 }
 
 /* dropdown styling */

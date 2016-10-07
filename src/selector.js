@@ -37,7 +37,8 @@ L.Control.BoxSelector = L.Control.extend({
 		this._toggleElement.id = 'boxselector-icon';
 		this._toggleElement.href = '#';
 		var iconWrapper = L.DomUtil.create('div', 'icon-wrapper', this._toggleElement);
-		var icon = L.DomUtil.create('div', 'icon', iconWrapper);
+		var icon = L.DomUtil.create('img', 'icon', iconWrapper);
+		icon.src = '../src/select-icon.png';
 		
 		//set up dropdown icon
 		var dropdownButton = L.DomUtil.create('a', 'boxselector-dropdown-button', buttonBar);

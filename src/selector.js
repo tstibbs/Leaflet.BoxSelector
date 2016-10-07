@@ -1,4 +1,4 @@
-L.Map.BoxSelector = L.Control.extend({
+L.Control.BoxSelector = L.Control.extend({
 	options: {
 		actions: {
 			Alert: function(selectedMarkers) {
@@ -229,3 +229,4 @@ L.Map.BoxSelector = L.Control.extend({
 		}
 	}
 });
+L.Control.BoxSelector.Actions = {};

@@ -28,4 +28,9 @@ var map = L.map('map', {
 	layers: [/*streets,*/ group]
 });
 
-(new L.Map.BoxSelector()).addTo(map);
+var options = {
+	actions: {
+		GPX: L.Control.BoxSelector.Actions.Gpx
+	}
+};
+(new L.Control.BoxSelector(options)).addTo(map);

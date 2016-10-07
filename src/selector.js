@@ -1,7 +1,7 @@
 L.Map.BoxSelector = L.Control.extend({
 	options: {
 		actions: {
-			alert: function(selectedMarkers) {
+			Alert: function(selectedMarkers) {
 				var output = "";
 				for (var i = 0; i < selectedMarkers.length; i++) {
 					output += selectedMarkers[i]._leaflet_id;//.getLatLng();
@@ -23,24 +23,29 @@ L.Map.BoxSelector = L.Control.extend({
 		this._addHooks();
 		
 		//set up select icon
-		var container = L.DomUtil.create('div', 'leaflet-control-box-selector leaflet-bar leaflet-control boxselector-control');
-		this._toggleElement = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single boxselector-icon', container);
+		this._selectorContainer = L.DomUtil.create('div', 'leaflet-control-box-selector leaflet-bar leaflet-control boxselector-control boxselector-hidden');
+		var buttonBar = L.DomUtil.create('div', 'leaflet-bar-part leaflet-bar-part-single boxselector-button-bar', this._selectorContainer);
+		this._toggleElement = L.DomUtil.create('a', 'boxselector-icon', buttonBar);
+		this._toggleElement.id = 'boxselector-icon';
 		this._toggleElement.href = '#';
 		var iconWrapper = L.DomUtil.create('div', 'icon-wrapper', this._toggleElement);
 		var icon = L.DomUtil.create('div', 'icon', iconWrapper);
 		
 		//set up dropdown icon
-		var dropdownButton = L.DomUtil.create('div', 'boxselector-dropdown-button', container);
-		var dropdownIcon = L.DomUtil.create('span', '', dropdownButton);
-		dropdownIcon.innerHTML = 'V';
+		var dropdownButton = L.DomUtil.create('a', 'boxselector-dropdown-button', buttonBar);
+		dropdownButton.id = 'boxselector-dropdown-button';
+		dropdownButton.href = '#';
+		var dropdownIconWrapper = L.DomUtil.create('div', 'boxselector-dropdown-icon-wrapper', dropdownButton);
+		var dropdownIcon = L.DomUtil.create('div', 'boxselector-dropdown-icon', dropdownIconWrapper);
 		L.DomEvent.on(dropdownButton, 'click', this.expandCollapse, this)
 		
 		//set up drop down (hidden to start with)
 		this._expanded = false;
-		this._dropdown = L.DomUtil.create('div', 'boxselector-dropdown boxselector-dropdown-hidden', container);
+		this._dropdown = L.DomUtil.create('div', 'boxselector-dropdown', this._selectorContainer);
 		for (var actionId in this.options.actions) {
-			var dropdownEntry = L.DomUtil.create('div', 'boxselector-dropdown-entry', this._dropdown);
+			var dropdownEntry = L.DomUtil.create('a', 'boxselector-dropdown-entry', this._dropdown);
 			dropdownEntry.actionId = actionId;
+			dropdownEntry.href = '#';
 			var label = L.DomUtil.create('span', '', dropdownEntry);
 			label.innerHTML = actionId;
 			label.actionId = actionId;
@@ -53,17 +58,17 @@ L.Map.BoxSelector = L.Control.extend({
 		//ensure we tear down		
 		this._map.on('unload', this._removeHooks, this);
 		
-		return container;
+		return this._selectorContainer;
 	},
 	
 	expandCollapse: function() {
 		if (this._expanded) {
-			L.DomUtil.addClass(this._dropdown, 'boxselector-dropdown-hidden');
-			L.DomUtil.removeClass(this._dropdown, 'boxselector-dropdown-expanded');
+			L.DomUtil.addClass(this._selectorContainer, 'boxselector-hidden');
+			L.DomUtil.removeClass(this._selectorContainer, 'boxselector-expanded');
 			this._expanded = false;
 		} else {
-			L.DomUtil.addClass(this._dropdown, 'boxselector-dropdown-expanded');
-			L.DomUtil.removeClass(this._dropdown, 'boxselector-dropdown-hidden');
+			L.DomUtil.addClass(this._selectorContainer, 'boxselector-expanded');
+			L.DomUtil.removeClass(this._selectorContainer, 'boxselector-hidden');
 			this._expanded = true;
 		}
 	},

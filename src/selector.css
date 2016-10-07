@@ -1,5 +1,52 @@
-.boxselector-dropdown-button, a.boxselector-icon {
-	display: inline-block !important; /* TODO work out what was up here and remove the important */
+/* basic styling */
+
+.boxselector-control {
+	box-shadow: none;
+}
+
+.boxselector-button-bar, .boxselector-dropdown {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}
+
+#boxselector-icon {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	
+	vertical-align: middle;
+	display: inline-block;
+	border-bottom: none;
+}
+
+#boxselector-dropdown-button {
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	
+	vertical-align: middle;
+	display: inline-block;
+	border-bottom: none;
+	
+	border-left: 1px solid #ccc;
+	width: initial;
+	padding-left: 2px;
+	padding-right: 2px;
+	line-height: 26px;
+	border-left: 1px solid #ccc;
+}
+
+.boxselector-control {
+	display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+/* button styling */
+
+.boxselector-button-bar {
+	margin-left: auto;
 }
 
 .boxselector-control .icon-wrapper {
@@ -22,14 +69,53 @@
 	background-color: #38f;
 }
 
-.boxselector-dropdown {
-    position: absolute;
+/* dropdown styling */
+
+.boxselector-dropdown:not(:last-child) {
+    border-top: 1px solid grey
 }
 
-.boxselector-dropdown-expanded {
-	display: visible; 
+.boxselector-dropdown a, .boxselector-dropdown a:hover {
+	width: initial;
 }
 
-.boxselector-dropdown-hidden {
-	display: none; 
+.boxselector-dropdown > a:first-child {
+ 	border-top-right-radius: 0px;
+ 	border-top-left-radius: 0px;
+}
+
+.boxselector-dropdown > a > span {
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+/* expand/hide */
+
+.boxselector-expanded .boxselector-button-bar {
+	border-bottom: 1px solid #ccc;
+}
+
+.boxselector-expanded #boxselector-dropdown-button {
+	border-bottom-right-radius: 0px;
+}
+
+.boxselector-expanded .boxselector-dropdown {
+	visibility: visible;
+}
+
+.boxselector-hidden .boxselector-dropdown {
+	display: none;
+}
+
+.boxselector-dropdown-icon-wrapper {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	width: 10px;
+}
+
+.boxselector-dropdown-icon {
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid black;
 }

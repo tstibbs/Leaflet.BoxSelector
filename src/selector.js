@@ -1,18 +1,21 @@
 L.Control.BoxSelector = L.Control.extend({
 	options: {
 		actions: {
-			Alert: function(selectedMarkers) {
-				var output = "";
-				for (var i = 0; i < selectedMarkers.length; i++) {
-					var marker = selectedMarkers[i];
-					output += marker.name
-					output += ": ";
-					output += marker.getLatLng().lat;
-					output += ",";
-					output += marker.getLatLng().lng;
-					output += "\n";
+			alert: {
+				display: "Display selected coords",
+				action:	function(selectedMarkers) {
+					var output = "";
+					for (var i = 0; i < selectedMarkers.length; i++) {
+						var marker = selectedMarkers[i];
+						output += marker.name
+						output += ": ";
+						output += marker.getLatLng().lat;
+						output += ",";
+						output += marker.getLatLng().lng;
+						output += "\n";
+					}
+					alert(output);
 				}
-				alert(output);
 			}
 		}
 	},
@@ -52,7 +55,7 @@ L.Control.BoxSelector = L.Control.extend({
 			dropdownEntry.actionId = actionId;
 			dropdownEntry.href = '#';
 			var label = L.DomUtil.create('span', '', dropdownEntry);
-			label.innerHTML = actionId;
+			label.innerHTML = this.options.actions[actionId].display;
 			label.actionId = actionId;
 
 			L.DomEvent.on(dropdownEntry, 'click', this._actionItemClick, this);
@@ -81,7 +84,7 @@ L.Control.BoxSelector = L.Control.extend({
 	_actionItemClick: function(e) {
 		var actionItemElement = e.target;
 		var actionId = actionItemElement.actionId;
-		var action = this.options.actions[actionId];
+		var action = this.options.actions[actionId].action;
 		action(this.getSelectedMarkers());
 	},
 

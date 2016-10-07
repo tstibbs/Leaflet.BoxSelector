@@ -30,7 +30,10 @@ var map = L.map('map', {
 
 var options = {
 	actions: {
-		GPX: L.Control.BoxSelector.Actions.Gpx
+		GPX: {
+			display: "Export to GPX",
+			action: L.Control.BoxSelector.Actions.Gpx
+		}
 	}
 };
 (new L.Control.BoxSelector(options)).addTo(map);

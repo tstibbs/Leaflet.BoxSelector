@@ -4,8 +4,13 @@ L.Map.BoxSelector = L.Control.extend({
 			Alert: function(selectedMarkers) {
 				var output = "";
 				for (var i = 0; i < selectedMarkers.length; i++) {
-					output += selectedMarkers[i]._leaflet_id;//.getLatLng();
-					output += ",\n";
+					var marker = selectedMarkers[i];
+					output += marker.name
+					output += ": ";
+					output += marker.getLatLng().lat;
+					output += ",";
+					output += marker.getLatLng().lng;
+					output += "\n";
 				}
 				alert(output);
 			}

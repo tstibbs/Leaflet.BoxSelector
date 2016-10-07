@@ -1,18 +1,21 @@
 var group = new L.LayerGroup();
 
-var markers = [
-	[51.503984, -0.118253],
-	[51.497466, -0.124905],
-	[51.506061, -0.116966],
-	[51.499102, -0.124648],
-	[51.503797, -0.143649],
-	[51.530535, -0.153362],
-	[51.500784, -0.143052],
-	[51.497770, -0.101477]
-];
+var markers = {
+	abc: [51.503984, -0.118253],
+	def: [51.497466, -0.124905],
+	ghi: [51.506061, -0.116966],
+	jkl: [51.499102, -0.124648],
+	mno: [51.503797, -0.143649],
+	pqr: [51.530535, -0.153362],
+	stu: [51.500784, -0.143052],
+	vwx: [51.497770, -0.101477]
+};
 
-markers.forEach(function(element) {
-	L.marker(element).addTo(group);
+Object.keys(markers).forEach(function(name) {
+	var latLng = markers[name];
+	var marker = L.marker(latLng);
+	marker.name = name;
+	marker.addTo(group);
 });
 
 // var streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

@@ -237,12 +237,12 @@ L.Control.BoxSelector = L.Control.extend({
 		this._setEnabled(!this._isEnabled());
 		if (this._isEnabled()) {
 			//enable selection
-			map.dragging.disable();
+			this._map.dragging.disable();
 			L.DomUtil.addClass(this._toggleElement, 'enabled');
 			this._manager.enable();
 		} else {
 			//disable selection
-			map.dragging.enable();
+			this._map.dragging.enable();
 			L.DomUtil.removeClass(this._toggleElement, 'enabled');
 			this._manager.disable();
 		}

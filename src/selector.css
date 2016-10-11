@@ -57,8 +57,16 @@
     height: 100%;
 }
 
-.boxselector-control .enabled .icon-wrapper {
+.boxselector-control .selection-enabled .icon-wrapper {
 	background-color: #94CAFF;
+}
+
+.boxselector-control .boxselector-dropdown-icon {
+	border-top-color: lightgrey;
+}
+
+.boxselector-control .selection-enabled .boxselector-dropdown-icon {
+	border-top-color: black;
 }
 
 /* dropdown styling */

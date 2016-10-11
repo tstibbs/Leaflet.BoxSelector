@@ -173,8 +173,8 @@ L.Control.BoxSelector = L.Control.extend({
 		
 		//set up select icon
 		this._selectorContainer = L.DomUtil.create('div', 'leaflet-control-box-selector leaflet-bar leaflet-control boxselector-control boxselector-hidden');
-		var buttonBar = L.DomUtil.create('div', 'leaflet-bar-part leaflet-bar-part-single boxselector-button-bar', this._selectorContainer);
-		this._toggleElement = L.DomUtil.create('a', 'boxselector-icon', buttonBar);
+		this._buttonBar = L.DomUtil.create('div', 'leaflet-bar-part leaflet-bar-part-single boxselector-button-bar', this._selectorContainer);
+		this._toggleElement = L.DomUtil.create('a', 'boxselector-icon', this._buttonBar);
 		this._toggleElement.id = 'boxselector-icon';
 		this._toggleElement.href = '#';
 		var iconWrapper = L.DomUtil.create('div', 'icon-wrapper', this._toggleElement);
@@ -182,7 +182,7 @@ L.Control.BoxSelector = L.Control.extend({
 		icon.src = '../src/select-icon.png';
 		
 		//set up dropdown icon
-		var dropdownButton = L.DomUtil.create('a', 'boxselector-dropdown-button', buttonBar);
+		var dropdownButton = L.DomUtil.create('a', 'boxselector-dropdown-button', this._buttonBar);
 		dropdownButton.id = 'boxselector-dropdown-button';
 		dropdownButton.href = '#';
 		var dropdownIconWrapper = L.DomUtil.create('div', 'boxselector-dropdown-icon-wrapper', dropdownButton);
@@ -240,17 +240,6 @@ L.Control.BoxSelector = L.Control.extend({
 
 	_toggle: function() {
 		this._setEnabled(!this._isEnabled());
-		if (this._isEnabled()) {
-			//enable selection
-			this._map.dragging.disable();
-			L.DomUtil.addClass(this._toggleElement, 'enabled');
-			this._manager.enable();
-		} else {
-			//disable selection
-			this._map.dragging.enable();
-			L.DomUtil.removeClass(this._toggleElement, 'enabled');
-			this._manager.disable();
-		}
 	},
 	
 	_isEnabled: function() {
@@ -259,6 +248,17 @@ L.Control.BoxSelector = L.Control.extend({
 	
 	_setEnabled: function(enabled) {
 		this._selectionEnabled = enabled;
+		if (enabled) {
+			//enable selection
+			this._map.dragging.disable();
+			L.DomUtil.addClass(this._buttonBar, 'selection-enabled');
+			this._manager.enable();
+		} else {
+			//disable selection
+			this._map.dragging.enable();
+			L.DomUtil.removeClass(this._buttonBar, 'selection-enabled');
+			this._manager.disable();
+		}
 	},
 
 	moved: function () {

@@ -111,3 +111,10 @@
 	border-right: 5px solid transparent;
 	border-top: 5px solid black;
 }
+
+/* marker selection */
+
+img.marker-highlight {
+    border-radius: 4px;
+    background-color: rgba(148, 202, 255, .7);
+}

@@ -1,3 +1,150 @@
+//selection logic separated into another class for clarity, but included in this file for simplicity
+var SelectionManager = L.Class.extend({
+
+	initialize: function (map) {
+		this._map = map;
+	},
+	
+	getSelectedMarkers: function() {
+		var markers = Object.keys(this._allSelectedMarkers).sort().map(function(markerId) { //sort is just so the order is predictable, makes debugging easier
+			return this._allSelectedMarkers[markerId];
+		}.bind(this));
+		return markers;
+	},
+	
+	enable: function() {
+		this._clearExistingSelection();
+	},
+	
+	_clearExistingSelection: function() {
+		this._allSelectedMarkers = {};
+		this._previouslySelectedMarkers = [];
+		this._currentlySelectedMarkers = [];
+	},
+	
+	disable: function() {
+		for (key in this._allSelectedMarkers) {
+			var marker = this._allSelectedMarkers[key];
+			this._toggleSelection(marker, false);
+		}
+		this._clearExistingSelection();
+	},
+	
+	start: function() {
+		this._currentlySelectedMarkers = [];
+		this._findAllLoadedMarkers();
+	},
+	
+	_findAllLoadedMarkers: function() {
+		this._allLoadedMarkers = {};
+		var fakeBounds = {contains: function() {return true;}};//TODO refactor enumerate to remove this
+		this._enumerateMarkers(fakeBounds, this._map._layers, function(marker) {
+			var key = L.Util.stamp(marker);
+			this._allLoadedMarkers[key] = marker;
+		}.bind(this));
+	},
+	
+	update: function(latLngBounds) {
+		var newlySelectedMarkers = {};
+		this._enumerateMarkers(latLngBounds, this._map._layers, function(marker) {
+			var key = L.Util.stamp(marker);
+			newlySelectedMarkers[key] = marker;
+		}.bind(this));
+		var mismatches = this._outerJoinArrays(Object.keys(this._currentlySelectedMarkers), Object.keys(newlySelectedMarkers));
+		var idToSelect = mismatches.in2ButNot1;
+		var idToDeselect = mismatches.in1ButNot2;
+		for (var i = 0; i < idToSelect.length; i++) {
+			var marker = this._allLoadedMarkers[idToSelect[i]];
+			this._toggleSelection(marker, true);
+		}
+		for (var i = 0; i < idToDeselect.length; i++) {
+			//if this marker was selected in a previous run, don't de-select it now
+			if (this._previouslySelectedMarkers.indexOf(idToDeselect[i]) == -1) {
+				var marker = this._allLoadedMarkers[idToDeselect[i]];
+				this._toggleSelection(marker, false);
+			}
+		}
+		this._currentlySelectedMarkers = newlySelectedMarkers;
+	},
+	
+	finish: function(bounds) {
+		this._enumerateMarkers(bounds, this._map._layers, function(marker) {
+			if (this._allSelectedMarkers == null) {
+				this._allSelectedMarkers = {};
+			}
+			var key = L.Util.stamp(marker);
+			this._allSelectedMarkers[key] = marker; //may already be there, but just override it
+		}.bind(this));
+		this._previouslySelectedMarkers = this._previouslySelectedMarkers.concat(Object.keys(this._currentlySelectedMarkers));
+	},
+	
+	_enumerateMarkers: function(bounds, layers, callback) {
+		Object.keys(layers).forEach(function (key) {
+			var layer = layers[key];
+			if (layer instanceof L.Marker) {
+				if (bounds.contains(layer.getLatLng())) {
+					callback(layer);
+				}
+			} else if (layer._layers != undefined) {
+				this._enumerateMarkers(bounds, layer._layers, callback);
+			}
+		}, this);
+	},
+	
+	_toggleSelection(marker, select) {
+		if (select) {
+			L.DomUtil.addClass(marker._icon, 'marker-highlight');
+		} else {
+			L.DomUtil.removeClass(marker._icon, 'marker-highlight');
+		}
+	},
+	
+	//both arrays must contain only numbers
+	_outerJoinArrays: function (arr1, arr2) {
+		function numericalSort(a, b) {
+			return a - b;
+		}
+		arr1 = arr1.sort(numericalSort);
+		arr2 = arr2.sort(numericalSort);
+		var i = 0;
+		var j = 0;
+		var in1ButNot2 = [];
+		var in2ButNot1 = [];
+		while (i < arr1.length || j < arr2.length) {
+			if (i == arr1.length) {
+				//run out of array 1, so everything left in array 2 must be missing from 1
+				in2ButNot1.push(arr2[j]); //TODO could just merge the arrays to be more efficient here
+				j++;
+			} else if (j == arr2.length) {
+				//run out of array 2, so everything left in array 1 must be missing from 2
+				in1ButNot2.push(arr1[i]); //TODO could just merge the arrays to be more efficient here
+				i++;
+			} else if (arr1[i] == arr2[j]) {
+				//in both, move on
+				i++;
+				j++;
+			} else if (arr1[i] < arr2[j]) {
+				//must be missing from arr2
+				in1ButNot2.push(arr1[i]);
+				i++;
+			} else {//if (arr1[i] > arr2[j]) {
+				//must be missing from arr1
+				in2ButNot1.push(arr2[j]);
+				j++;
+			}
+		}
+		if (i != arr1.length || j != arr2.length) {
+			console.error("not all the things were consumed");
+			console.error("arr1.length=" + arr1.length + ", i=" + i);
+			console.error("arr2.length=" + arr2.length + ", j=" + j);
+		}
+		return {
+			in1ButNot2: in1ButNot2,
+			in2ButNot1: in2ButNot1
+		};
+	}
+});
+
 L.Control.BoxSelector = L.Control.extend({
 	options: {
 		actions: {
@@ -29,6 +176,7 @@ L.Control.BoxSelector = L.Control.extend({
 		this._mapcontainer = map._container;
 		this._pane = map._panes.overlayPane;
 		this._addHooks();
+		this._manager = new SelectionManager(this._map);
 		
 		//set up select icon
 		this._selectorContainer = L.DomUtil.create('div', 'leaflet-control-box-selector leaflet-bar leaflet-control boxselector-control boxselector-hidden');
@@ -103,11 +251,12 @@ L.Control.BoxSelector = L.Control.extend({
 			//enable selection
 			map.dragging.disable();
 			L.DomUtil.addClass(this._toggleElement, 'enabled');
+			this._manager.enable();
 		} else {
 			//disable selection
 			map.dragging.enable();
 			L.DomUtil.removeClass(this._toggleElement, 'enabled');
-			this._allSelectedMarkers = {};//clear our existing selection
+			this._manager.disable();
 		}
 	},
 	
@@ -145,6 +294,8 @@ L.Control.BoxSelector = L.Control.extend({
 			mouseup: this._onMouseUp,
 			keydown: this._onKeyDown
 		}, this);
+
+		this._manager.start();
 	},
 
 	_onMouseMove: function (e) {
@@ -164,6 +315,12 @@ L.Control.BoxSelector = L.Control.extend({
 
 		this._box.style.width  = size.x + 'px';
 		this._box.style.height = size.y + 'px';
+
+		var latLngBounds = new L.LatLngBounds(
+			this._map.containerPointToLatLng(this._startPoint),
+			this._map.containerPointToLatLng(this._point));
+
+		this._manager.update(latLngBounds);
 	},
 
 	_finish: function () {
@@ -197,34 +354,11 @@ L.Control.BoxSelector = L.Control.extend({
 			this._map.containerPointToLatLng(this._startPoint),
 			this._map.containerPointToLatLng(this._point));
 
-		this._enumerateMarkers(bounds, map._layers, function(marker) {
-			if (this._allSelectedMarkers == null) {
-				this._allSelectedMarkers = {};
-			}
-			var key = L.Util.stamp(marker);
-			this._allSelectedMarkers[key] = marker; //may already be there, but just override it
-		}.bind(this));
-		console.log(this.getSelectedMarkers());
-	},
-
-	_enumerateMarkers: function(bounds, layers, callback) {
-		Object.keys(layers).forEach(function (key) {
-			var layer = layers[key];
-			if (layer instanceof L.Marker) {
-				if (bounds.contains(layer.getLatLng())) {
-					callback(layer);
-				}
-			} else if (layer._layers != undefined) {
-				this._enumerateMarkers(bounds, layer._layers, callback);
-			}
-		}, this);
+		this._manager.finish(bounds);
 	},
 	
 	getSelectedMarkers: function() {
-		var markers = Object.keys(this._allSelectedMarkers).sort().map(function(markerId) { //sort is just so the order is predictable, makes debugging easier
-			return this._allSelectedMarkers[markerId];
-		}.bind(this));
-		return markers;
+		return this._manager.getSelectedMarkers();
 	},
 
 	_onKeyDown: function (e) {

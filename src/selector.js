@@ -146,6 +146,11 @@ var SelectionManager = L.Class.extend({
 });
 
 L.Control.BoxSelector = L.Control.extend({
+
+	options: {
+		highlightOnDrag: true //on by default but could cause poor performance if there is a large number of markers
+	},
+
 	initialize: function (options) {
 		L.setOptions(this, options);
 		if (this.options.actions == null) {
@@ -304,11 +309,13 @@ L.Control.BoxSelector = L.Control.extend({
 		this._box.style.width  = size.x + 'px';
 		this._box.style.height = size.y + 'px';
 
-		var latLngBounds = new L.LatLngBounds(
-			this._map.containerPointToLatLng(this._startPoint),
-			this._map.containerPointToLatLng(this._point));
+		if (this.options.highlightOnDrag) {
+			var latLngBounds = new L.LatLngBounds(
+				this._map.containerPointToLatLng(this._startPoint),
+				this._map.containerPointToLatLng(this._point));
 
-		this._manager.update(latLngBounds);
+			this._manager.update(latLngBounds);
+		}
 	},
 
 	_finish: function () {
@@ -341,7 +348,11 @@ L.Control.BoxSelector = L.Control.extend({
 		var bounds = new L.LatLngBounds(
 			this._map.containerPointToLatLng(this._startPoint),
 			this._map.containerPointToLatLng(this._point));
-
+		
+		if (!this.options.highlightOnDrag) {
+			//if we aren't highlighting on drag, fool the manager into updating
+			this._manager.update(bounds);
+		}
 		this._manager.finish(bounds);
 	},
 	

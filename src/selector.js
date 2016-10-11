@@ -262,10 +262,6 @@ L.Control.BoxSelector = L.Control.extend({
 		}
 	},
 
-	moved: function () {
-		return this._moved;
-	},
-
 	_resetState: function () {
 		this._moved = false;
 	},

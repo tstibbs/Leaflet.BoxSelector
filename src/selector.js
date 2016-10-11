@@ -187,7 +187,7 @@ L.Control.BoxSelector = L.Control.extend({
 		dropdownButton.href = '#';
 		var dropdownIconWrapper = L.DomUtil.create('div', 'boxselector-dropdown-icon-wrapper', dropdownButton);
 		var dropdownIcon = L.DomUtil.create('div', 'boxselector-dropdown-icon', dropdownIconWrapper);
-		L.DomEvent.on(dropdownButton, 'click', this.expandCollapse, this)
+		L.DomEvent.on(dropdownButton, 'click', this._expandCollapse, this)
 		
 		//set up drop down (hidden to start with)
 		this._expanded = false;
@@ -211,7 +211,7 @@ L.Control.BoxSelector = L.Control.extend({
 		return this._selectorContainer;
 	},
 	
-	expandCollapse: function() {
+	_expandCollapse: function() {
 		if (this._expanded) {
 			L.DomUtil.addClass(this._selectorContainer, 'boxselector-hidden');
 			L.DomUtil.removeClass(this._selectorContainer, 'boxselector-expanded');
@@ -227,6 +227,7 @@ L.Control.BoxSelector = L.Control.extend({
 		var actionItemElement = e.target;
 		var actionId = actionItemElement.actionId;
 		var action = this.options.actions[actionId].action;
+		this._expandCollapse();
 		action(this.getSelectedMarkers());
 	},
 

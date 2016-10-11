@@ -146,29 +146,17 @@ var SelectionManager = L.Class.extend({
 });
 
 L.Control.BoxSelector = L.Control.extend({
-	options: {
-		actions: {
-			alert: {
-				display: "Display selected coords",
-				action:	function(selectedMarkers) {
-					var output = "";
-					for (var i = 0; i < selectedMarkers.length; i++) {
-						var marker = selectedMarkers[i];
-						output += marker.name
-						output += ": ";
-						output += marker.getLatLng().lat;
-						output += ",";
-						output += marker.getLatLng().lng;
-						output += "\n";
-					}
-					alert(output);
+	initialize: function (options) {
+		L.setOptions(this, options);
+		if (this.options.actions == null) {
+			//set default action
+			this.options.actions = {
+				alert: {
+					display: "Display selected coords",
+					action:	L.Control.BoxSelector.Actions.Alert
 				}
 			}
 		}
-	},
-
-	initialize: function (options) {
-		L.setOptions(this, options);
 	},
 	
 	onAdd: function (map) {
@@ -368,3 +356,16 @@ L.Control.BoxSelector = L.Control.extend({
 	}
 });
 L.Control.BoxSelector.Actions = {};
+L.Control.BoxSelector.Actions.Alert = function(selectedMarkers) {
+	var output = "";
+	for (var i = 0; i < selectedMarkers.length; i++) {
+		var marker = selectedMarkers[i];
+		output += marker.name
+		output += ": ";
+		output += marker.getLatLng().lat;
+		output += ",";
+		output += marker.getLatLng().lng;
+		output += "\n";
+	}
+	alert(output);
+}

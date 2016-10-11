@@ -30,6 +30,10 @@ var map = L.map('map', {
 
 var options = {
 	actions: {
+		alert: {
+			display: "Display selected coords",
+			action:	L.Control.BoxSelector.Actions.Alert
+		},
 		GPX: {
 			display: "Export to GPX",
 			action: L.Control.BoxSelector.Actions.Gpx

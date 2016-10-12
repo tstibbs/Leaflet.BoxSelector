@@ -6,8 +6,14 @@ var SelectionManager = L.Class.extend({
 	},
 	
 	getSelectedMarkers: function() {
-		var markers = Object.keys(this._allSelectedMarkers).sort().map(function(markerId) { //sort is just so the order is predictable, makes debugging easier
-			return this._allSelectedMarkers[markerId];
+		var markers = [];
+		Object.keys(this._allSelectedMarkers).sort().forEach(function(markerId) { //sort is just so the order is predictable, makes debugging easier
+			var marker = this._allSelectedMarkers[markerId];
+			if (marker instanceof L.MarkerCluster) { //the actual cluster icon itself
+				markers = markers.concat(marker.getAllChildMarkers());
+			} else { // standard marker hopefully
+				markers.push(marker);
+			}
 		}.bind(this));
 		return markers;
 	},
@@ -40,7 +46,7 @@ var SelectionManager = L.Class.extend({
 		var fakeBounds = {contains: function() {return true;}};//TODO refactor enumerate to remove this
 		this._enumerateMarkers(fakeBounds, this._map._layers, function(marker) {
 			var key = L.Util.stamp(marker);
-			this._allLoadedMarkers[key] = marker;
+			this._allLoadedMarkers[key] = marker; // include the cluster icons, as those are what we want to highlight
 		}.bind(this));
 	},
 	

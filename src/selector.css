@@ -19,6 +19,12 @@
 	border-bottom: none;
 }
 
+#boxselector-icon div.icon {
+    background-image: url("select-icon.png");
+    width: 18px;
+    height: 18px;
+}
+
 #boxselector-dropdown-button {
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;

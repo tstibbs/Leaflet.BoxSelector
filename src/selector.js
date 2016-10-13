@@ -83,16 +83,28 @@ var SelectionManager = L.Class.extend({
 		}.bind(this));
 		this._previouslySelectedMarkers = this._previouslySelectedMarkers.concat(Object.keys(this._currentlySelectedMarkers));
 	},
+
+	_isIgnoredLayer: function(layer) {
+		//it isn't obvious that there's a clever way to work out if we should ignore a layer, so for now we'll just have to have a list of 'known bad' layer types
+		//sub groups (https://github.com/ghybs/Leaflet.FeatureGroup.SubGroup) essentially duplicate the markers and don't appear on the UI, so ignore them
+		if (L.FeatureGroup.SubGroup != undefined) {
+			return layer instanceof L.FeatureGroup.SubGroup;
+		} else {
+			return false;
+		}
+	},
 	
 	_enumerateMarkers: function(bounds, layers, callback) {
 		Object.keys(layers).forEach(function (key) {
 			var layer = layers[key];
-			if (layer instanceof L.Marker) {
-				if (bounds.contains(layer.getLatLng())) {
-					callback(layer);
+			if (!this._isIgnoredLayer(layer)) {
+				if (layer instanceof L.Marker) {
+					if (bounds.contains(layer.getLatLng())) {
+						callback(layer);
+					}
+				} else if (layer._layers != undefined) {
+					this._enumerateMarkers(bounds, layer._layers, callback);
 				}
-			} else if (layer._layers != undefined) {
-				this._enumerateMarkers(bounds, layer._layers, callback);
 			}
 		}, this);
 	},

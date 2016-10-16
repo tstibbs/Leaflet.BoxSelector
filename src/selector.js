@@ -9,7 +9,7 @@ var SelectionManager = L.Class.extend({
 		var markers = [];
 		Object.keys(this._allSelectedMarkers).sort().forEach(function(markerId) { //sort is just so the order is predictable, makes debugging easier
 			var marker = this._allSelectedMarkers[markerId];
-			if (marker instanceof L.MarkerCluster) { //the actual cluster icon itself
+			if (L.MarkerCluster != undefined && marker instanceof L.MarkerCluster) { //the actual cluster icon itself
 				markers = markers.concat(marker.getAllChildMarkers());
 			} else { // standard marker hopefully
 				markers.push(marker);

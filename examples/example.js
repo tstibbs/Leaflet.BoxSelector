@@ -18,14 +18,14 @@ Object.keys(markers).forEach(function(name) {
 	marker.addTo(group);
 });
 
-// var streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	// attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-// });
+var streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+});
 
 var map = L.map('map', {
 	center: [51.515, -0.13],
 	zoom: 13,
-	layers: [/*streets,*/ group]
+	layers: [streets, group]
 });
 
 var options = {

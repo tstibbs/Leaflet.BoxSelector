@@ -33,15 +33,15 @@ Object.keys(markers2).forEach(function(name) {
 var subGroup1 = L.featureGroup.subGroup(parentGroup, arrayOfMarkers1);
 var subGroup2 = L.featureGroup.subGroup(parentGroup, arrayOfMarkers2);
 
-// var streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	// attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-// });
+var streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+});
 
 var map = L.map('map', {
 	center: [51.515, -0.13],
 	zoom: 13,
 	maxZoom: 13,
-	layers: [/*streets,*/ parentGroup]
+	layers: [streets, parentGroup]
 });
 subGroup1.addTo(map);
 subGroup2.addTo(map);

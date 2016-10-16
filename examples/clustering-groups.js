@@ -50,7 +50,7 @@ var options = {
 	actions: {
 		alert: {
 			display: "Display selected coords",
-			action:	L.Control.BoxSelector.Actions.Alert
+			action:	L.Control.BoxSelector.Actions.alert()
 		}
 	},
 	highlightOnDrag: false

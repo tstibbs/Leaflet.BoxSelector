@@ -32,11 +32,11 @@ var options = {
 	actions: {
 		alert: {
 			display: "Display selected coords",
-			action:	L.Control.BoxSelector.Actions.Alert
+			action:	L.Control.BoxSelector.Actions.alert()
 		},
 		GPX: {
 			display: "Export to GPX",
-			action: L.Control.BoxSelector.Actions.Gpx
+			action: L.Control.BoxSelector.Actions.gpx('points.gpx')
 		}
 	}
 };

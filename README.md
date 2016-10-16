@@ -1,6 +1,7 @@
 This is a simple leaflet control that allows you to draw a box to select a number of markers. It then allows you to perform an action on those markers (e.g. export to file). This control is heavily influenced by the built-in box-zoom (shift + click and drag draws a box and then zooms to it) so the selection area looks very similar.
 
 [Live demo](https://tstibbs.github.io/Leaflet.BoxSelector/examples/index.html)
+
 [Live demo with selectable clusters](https://tstibbs.github.io/Leaflet.BoxSelector/examples/clustering.html)
 
 ## How to use it

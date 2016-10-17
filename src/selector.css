@@ -4,7 +4,7 @@
 	box-shadow: none;
 }
 
-.boxselector-button-bar, .boxselector-dropdown {
+.leaflet-container:not(.leaflet-touch) .boxselector-button-bar, .leaflet-container:not(.leaflet-touch) .boxselector-dropdown {
 	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 }
 
@@ -95,10 +95,36 @@
     margin-right: 6px;
 }
 
+.leaflet-touch .boxselector-dropdown a.boxselector-dropdown-entry {
+	width: initial
+}
+
+.leaflet-touch .boxselector-expanded .boxselector-dropdown {
+	border-left: 2px solid rgba(0,0,0,0.2);
+	border-right: 2px solid rgba(0,0,0,0.2);
+	border-bottom: 2px solid rgba(0,0,0,0.2);
+ 	border-bottom-right-radius: 4px;
+ 	border-bottom-left-radius: 4px;
+}
+
+.leaflet-touch .boxselector-expanded .boxselector-button-bar {
+	border-left: 2px solid rgba(0,0,0,0.2);
+	border-right: 2px solid rgba(0,0,0,0.2);
+	border-top: 2px solid rgba(0,0,0,0.2);
+ 	border-top-right-radius: 4px;
+ 	border-top-left-radius: 4px;
+ 	border-bottom-left-radius: 0px;
+ 	border-bottom: 1px solid #ccc;
+}
+
 /* expand/hide */
 
-.boxselector-expanded .boxselector-button-bar {
+.leaflet-container:not(.leaflet-touch) .boxselector-expanded .boxselector-button-bar {
 	border-bottom: 1px solid #ccc;
+}
+
+.leaflet-touch div.boxselector-expanded {
+	border: none;
 }
 
 .boxselector-expanded #boxselector-dropdown-button {
@@ -124,6 +150,10 @@
 	border-left: 5px solid transparent;
 	border-right: 5px solid transparent;
 	border-top: 5px solid black;
+}
+
+.boxselector-expanded #boxselector-icon {
+	border-bottom-left-radius: 0px;	
 }
 
 /* marker selection */

@@ -125,7 +125,7 @@
 			}, this);
 		},
 		
-		_toggleSelection(marker, select) {
+		_toggleSelection: function(marker, select) {
 			if (select) {
 				L.DomUtil.addClass(marker._icon, 'marker-highlight');
 			} else {

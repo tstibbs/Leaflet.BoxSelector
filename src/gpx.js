@@ -31,6 +31,9 @@
 			output += '\n</gpx>';
 
 			var blob = new Blob([output], {type: "application/gpx+xml;charset=utf-8"});
+			if (typeof fileName === 'function') {
+				fileName = fileName();
+			}
 			saveAs(blob, fileName); // requires https://unpkg.com/file-saver@1.3.3/FileSaver.min.js
 		}
 	}

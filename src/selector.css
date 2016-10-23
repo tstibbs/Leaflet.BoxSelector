@@ -36,6 +36,7 @@
 	border-bottom: none;
 	
 	border-left: 1px solid #ccc;
+	width: auto; /* fallback for IE */
 	width: initial;
 	padding-left: 2px;
 	padding-right: 2px;
@@ -45,7 +46,7 @@
 
 .boxselector-control {
 	display: flex;
-    flex-direction: column;
+	flex-direction: column;
     justify-content: flex-end;
 }
 
@@ -96,6 +97,7 @@
 }
 
 .leaflet-touch .boxselector-dropdown a.boxselector-dropdown-entry {
+	width: auto; /* fallback for IE */
 	width: initial
 }
 

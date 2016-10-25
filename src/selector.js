@@ -308,6 +308,8 @@
 
 			L.DomUtil.disableTextSelection();
 			L.DomUtil.disableImageDrag();
+			this._map.scrollWheelZoom.disable();
+			this._map.touchZoom.disable();
 
 			this._startPoint = this._map.mouseEventToContainerPoint(e);
 
@@ -356,6 +358,8 @@
 
 			L.DomUtil.enableTextSelection();
 			L.DomUtil.enableImageDrag();
+			this._map.scrollWheelZoom.enable();
+			this._map.touchZoom.enable();
 
 			L.DomEvent.off(document, {
 				contextmenu: L.DomEvent.stop,

@@ -303,6 +303,13 @@
 			if (!this._isEnabled() || (e.button !== 0)) {
 				return false;
 			}
+			
+			if (this._moved) {
+				//if you try to pinch to zoom while in selection mode, the selection box gets stuck on the
+				//screen because _onMouseDown never gets called. We ought to fix that bug, but there may be
+				//others as well, so this is a good catch all to tidy up any 'stuck' selection boxes
+				this._finish();
+			}
 
 			this._resetState();
 
@@ -367,12 +374,6 @@
 				mouseup: this._onMouseUp,
 				keydown: this._onKeyDown
 			}, this);
-		},
-
-		_onMouseUp: function (e) {
-			if ((e.which !== 1) && (e.button !== 1)) { return; }
-
-			this._finish();
 
 			if (!this._moved) { return; }
 			// Postpone to next JS tick so internal click event handling
@@ -388,6 +389,11 @@
 				this._manager.update(bounds);
 			}
 			this._manager.finish(bounds);
+		},
+
+		_onMouseUp: function (e) {
+			if ((e.which !== 1) && (e.button !== 1)) { return; }
+			this._finish();
 		},
 		
 		getSelectedMarkers: function() {

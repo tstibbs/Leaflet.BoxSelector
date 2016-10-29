@@ -333,6 +333,10 @@
 		_onMouseMove: function (e) {
 			if (!this._moved) {
 				this._moved = true;
+				
+				if (this._box != null) {
+				    L.DomUtil.remove(this._box);
+				}
 
 				this._box = L.DomUtil.create('div', 'leaflet-zoom-box', this._mapcontainer);
 				L.DomUtil.addClass(this._mapcontainer, 'leaflet-crosshair');

@@ -296,21 +296,17 @@
 		},
 
 		_resetState: function () {
+			//if you try to pinch to zoom while in selection mode, _onMouseDown never gets called. This means it never registers the selection. We ought to fix that bug, but there may be others as well, so this is a good catch all to tidy up any 'unfinished' selection boxes
+			if (this._box != null) {
+				L.DomUtil.remove(this._box);
+			}
 			this._moved = false;
 		},
-
-		_onMouseDown: function (e) {
-			if (!this._isEnabled() || (e.button !== 0)) {
-				return false;
-			}
-			
+		
+		_start: function(e) {
 			if (this._moved) {
-				//if you try to pinch to zoom while in selection mode, the selection box gets stuck on the
-				//screen because _onMouseDown never gets called. We ought to fix that bug, but there may be
-				//others as well, so this is a good catch all to tidy up any 'stuck' selection boxes
 				this._finish();
 			}
-
 			this._resetState();
 
 			L.DomUtil.disableTextSelection();
@@ -329,12 +325,13 @@
 
 			this._manager.start();
 		},
-
-		_onMouseMove: function (e) {
+		
+		_update: function(e) {
 			if (!this._moved) {
 				this._moved = true;
 				
 				if (this._box != null) {
+					//must be leftover from a previous drag
 				    L.DomUtil.remove(this._box);
 				}
 
@@ -365,6 +362,7 @@
 			if (this._moved) {
 				L.DomUtil.remove(this._box);
 				L.DomUtil.removeClass(this._mapcontainer, 'leaflet-crosshair');
+				
 			}
 
 			L.DomUtil.enableTextSelection();
@@ -379,29 +377,42 @@
 				keydown: this._onKeyDown
 			}, this);
 
-			if (!this._moved) { return; }
-			// Postpone to next JS tick so internal click event handling
-			// still see it as "moved".
-			setTimeout(L.bind(this._resetState, this), 0);
+			if (this._moved) {
+				// Postpone to next JS tick so internal click event handling
+				// still see it as "moved".
+				setTimeout(L.bind(this._resetState, this), 0);
 
-			var bounds = new L.LatLngBounds(
-				this._map.containerPointToLatLng(this._startPoint),
-				this._map.containerPointToLatLng(this._point));
-			
-			if (!this.options.highlightOnDrag) {
-				//if we aren't highlighting on drag, fool the manager into updating
-				this._manager.update(bounds);
+				var bounds = new L.LatLngBounds(
+					this._map.containerPointToLatLng(this._startPoint),
+					this._map.containerPointToLatLng(this._point));
+				
+				if (!this.options.highlightOnDrag) {
+					//if we aren't highlighting on drag, fool the manager into updating
+					this._manager.update(bounds);
+				}
+				this._manager.finish(bounds);
 			}
-			this._manager.finish(bounds);
+		},
+		
+		getSelectedMarkers: function() {
+			return this._manager.getSelectedMarkers();
+		},
+
+		_onMouseDown: function (e) {
+			if (!this._isEnabled() || (e.button !== 0)) {
+				return false;
+			}
+			
+			this._start(e);
+		},
+
+		_onMouseMove: function (e) {
+			this._update(e);
 		},
 
 		_onMouseUp: function (e) {
 			if ((e.which !== 1) && (e.button !== 1)) { return; }
 			this._finish();
-		},
-		
-		getSelectedMarkers: function() {
-			return this._manager.getSelectedMarkers();
 		},
 
 		_onKeyDown: function (e) {

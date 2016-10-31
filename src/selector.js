@@ -285,11 +285,13 @@
 			if (enabled) {
 				//enable selection
 				this._map.dragging.disable();
+				this._map.boxZoom.disable();
 				L.DomUtil.addClass(this._buttonBar, 'selection-enabled');
 				this._manager.enable();
 			} else {
 				//disable selection
 				this._map.dragging.enable();
+				this._map.boxZoom.enable();
 				L.DomUtil.removeClass(this._buttonBar, 'selection-enabled');
 				this._manager.disable();
 			}
@@ -313,6 +315,7 @@
 			L.DomUtil.disableImageDrag();
 			this._map.scrollWheelZoom.disable();
 			this._map.touchZoom.disable();
+			this._map.doubleClickZoom.disable();
 
 			this._startPoint = this._map.mouseEventToContainerPoint(e);
 
@@ -369,6 +372,7 @@
 			L.DomUtil.enableImageDrag();
 			this._map.scrollWheelZoom.enable();
 			this._map.touchZoom.enable();
+			this._map.doubleClickZoom.enable();
 
 			L.DomEvent.off(document, {
 				contextmenu: L.DomEvent.stop,

@@ -23,9 +23,30 @@
 			for (var i = 0; i < markers.length; i++) {
 				var lat = markers[i].getLatLng().lat;
 				var lng = markers[i].getLatLng().lng;
-				var name = markers[i].name;
+				var name = markers[i].name;//for backwards compatablity
+				var exportData = markers[i].exportData;
+				var link = null;
+				var cmt = null;
+				var desc = null;
+				if (exportData != null) {
+					if (exportData.name != null) {
+						name = exportData.name
+					}
+					link = exportData.link;
+					cmt = exportData.cmt;
+					desc = exportData.desc;
+				}
 				output += '\n    <wpt lat="' + lat + '" lon="' + lng + '">';
 				output += '\n        <name>' + name + '</name>';
+				if (link != null) {
+					output += '\n        <link href="' + link.replace(/"/g, "'") + '" />';
+				}
+				if (cmt != null) {
+					output += '\n        <cmt>' + cmt + '</cmt>';
+				}
+				if (desc != null) {
+					output += '\n        <desc>' + desc + '</desc>';
+				}
 				output += '\n    </wpt>';
 			}
 			output += '\n</gpx>';

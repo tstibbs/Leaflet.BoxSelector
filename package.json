@@ -1,0 +1,5 @@
+{
+    "name": "leaflet-box-selector",
+    "version": "0.0.1",
+    "main": "src/selector.js"
+}

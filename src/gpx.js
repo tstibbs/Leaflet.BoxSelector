@@ -2,7 +2,7 @@
 
     // AMD
     if (typeof define === 'function' && define.amd) {
-        define(["file_saver"], factory);
+        define(["file-saver"], factory);
 
     // Common JS
     } else if (typeof exports === 'object') {

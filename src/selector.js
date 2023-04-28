@@ -279,6 +279,7 @@
 		},
 
 		_addMoveHooks: function () {
+			document.addEventListener('touchstart', L.DomEvent.preventDefault, {passive: false});
 			L.DomEvent.on(document, {
 				contextmenu: L.DomEvent.stop,
 				mousemove: this._onMouseMove,
@@ -290,6 +291,7 @@
 		},
 
 		_removeMoveHooks: function () {
+			document.removeEventListener('touchstart', L.DomEvent.preventDefault, {passive: false});
 			L.DomEvent.off(document, {
 				contextmenu: L.DomEvent.stop,
 				mousemove: this._onMouseMove,
@@ -430,6 +432,10 @@
 
 		_onMouseDown: function (e) {
 			if (!this._isEnabled() || (e.type !== 'touchstart' && e.button !== 0)) {
+				return false;
+			}
+			if (this._selectorContainer.contains(e.target)) {
+				//don't start the drag, we're trying to turn this plugin off
 				return false;
 			}
 			

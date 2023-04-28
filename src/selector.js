@@ -202,7 +202,7 @@
 			this._map = map;
 			this._mapcontainer = map._container;
 			this._pane = map._panes.overlayPane;
-			this._addHooks();
+			this._addStartHooks();
 			this._manager = new SelectionManager(this._map);
 			
 			//set up select icon
@@ -239,7 +239,7 @@
 			L.DomEvent.on(this._toggleElement, 'click', this._toggle, this);
 
 			//ensure we tear down		
-			this._map.on('unload', this._removeHooks, this);
+			this._map.on('unload', this._removeStartHooks, this);
 			
 			return this._selectorContainer;
 		},
@@ -264,12 +264,40 @@
 			action(this.getSelectedMarkers());
 		},
 
-		_addHooks: function () {
-			L.DomEvent.on(this._mapcontainer, 'mousedown', this._onMouseDown, this);
+		_addStartHooks: function () {
+			L.DomEvent.on(this._mapcontainer, {
+				'mousedown': this._onMouseDown,
+				'touchstart': this._onMouseDown
+			}, this);
 		},
 
-		_removeHooks: function () {
-			L.DomEvent.off(this._mapcontainer, 'mousedown', this._onMouseDown, this);
+		_removeStartHooks: function () {
+			L.DomEvent.off(this._mapcontainer, {
+				'mousedown': this._onMouseDown,
+				'touchstart': this._onMouseDown
+			}, this);
+		},
+
+		_addMoveHooks: function () {
+			L.DomEvent.on(document, {
+				contextmenu: L.DomEvent.stop,
+				mousemove: this._onMouseMove,
+				mouseup: this._onMouseUp,
+				keydown: this._onKeyDown,
+				touchend: this._onMouseUp,
+				touchmove: this._onMouseMove
+			}, this);
+		},
+
+		_removeMoveHooks: function () {
+			L.DomEvent.off(document, {
+				contextmenu: L.DomEvent.stop,
+				mousemove: this._onMouseMove,
+				mouseup: this._onMouseUp,
+				keydown: this._onKeyDown,
+				touchend: this._onMouseUp,
+				touchmove: this._onMouseMove
+			}, this);
 		},
 
 		_toggle: function() {
@@ -317,16 +345,19 @@
 			this._map.touchZoom.disable();
 			this._map.doubleClickZoom.disable();
 
-			this._startPoint = this._map.mouseEventToContainerPoint(e);
+			this._startPoint = this._eventToContainerPoint(e);
 
-			L.DomEvent.on(document, {
-				contextmenu: L.DomEvent.stop,
-				mousemove: this._onMouseMove,
-				mouseup: this._onMouseUp,
-				keydown: this._onKeyDown
-			}, this);
+			this._addMoveHooks()
 
 			this._manager.start();
+		},
+
+		_eventToContainerPoint: function(e) {
+			if (e.type.startsWith('touch')) {
+				return this._map.mouseEventToContainerPoint(e.touches[0])
+			} else {
+				return this._map.mouseEventToContainerPoint(e)
+			}
 		},
 		
 		_update: function(e) {
@@ -342,7 +373,7 @@
 				L.DomUtil.addClass(this._mapcontainer, 'leaflet-crosshair');
 			}
 
-			this._point = this._map.mouseEventToContainerPoint(e);
+			this._point = this._eventToContainerPoint(e);
 
 			var bounds = new L.Bounds(this._point, this._startPoint),
 				size = bounds.getSize();
@@ -374,12 +405,7 @@
 			this._map.touchZoom.enable();
 			this._map.doubleClickZoom.enable();
 
-			L.DomEvent.off(document, {
-				contextmenu: L.DomEvent.stop,
-				mousemove: this._onMouseMove,
-				mouseup: this._onMouseUp,
-				keydown: this._onKeyDown
-			}, this);
+			this._removeMoveHooks()
 
 			if (this._moved) {
 				// Postpone to next JS tick so internal click event handling
@@ -403,7 +429,7 @@
 		},
 
 		_onMouseDown: function (e) {
-			if (!this._isEnabled() || (e.button !== 0)) {
+			if (!this._isEnabled() || (e.type !== 'touchstart' && e.button !== 0)) {
 				return false;
 			}
 			
@@ -415,7 +441,9 @@
 		},
 
 		_onMouseUp: function (e) {
-			if ((e.which !== 1) && (e.button !== 1)) { return; }
+			if ((e.which !== 1) && (e.button !== 1)) {
+				return;
+			}
 			this._finish();
 		},
 

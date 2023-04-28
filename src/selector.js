@@ -428,7 +428,7 @@
 	BoxSelector.Actions = {};
 	BoxSelector.Actions.alert = function() {
 		return function(selectedMarkers) {
-			var output = "";
+			var output = "This is for example/debugging purposes to show which markers have been selected.\n\n";
 			for (var i = 0; i < selectedMarkers.length; i++) {
 				var marker = selectedMarkers[i];
 				output += marker.name

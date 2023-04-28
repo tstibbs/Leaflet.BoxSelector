@@ -1,6 +1,10 @@
+## What is this?
+
 This is a simple leaflet control that allows you to draw a box to select a number of markers. It then allows you to perform an action on those markers (e.g. export to file). This control is heavily influenced by the built-in box-zoom (shift + click and drag draws a box and then zooms to it) so the selection area looks very similar.
 
 Requires leaflet 1.6.0 to work with touch devices.
+
+## How can I try it?
 
 [Live demo](https://tstibbs.github.io/Leaflet.BoxSelector/examples/index.html)
 
@@ -35,3 +39,7 @@ Note that the `alert` and `gpx` actions are created via factory functions which 
 ### Adding custom actions
 
 Actions are simply functions which take a single argument which is an array of `L.Marker` objects. Passing a function as the value of  `options.[action_name].action` will register it as an action and it will be available in the drop down to select when you have selected markers. If you create an action which you think may be useful to others, please consider submitting a pull request to have it included in this repository.
+
+## Contributing
+
+PRs are very welcome, but for any big changes or new features please open an issue to discuss first.

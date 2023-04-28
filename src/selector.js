@@ -441,7 +441,7 @@
 		},
 
 		_onMouseUp: function (e) {
-			if ((e.which !== 1) && (e.button !== 1)) {
+			if (!e.type.startsWith('touch') && (e.which !== 1) && (e.button !== 1)) {
 				return;
 			}
 			this._finish();

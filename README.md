@@ -1,3 +1,6 @@
+[![License: AL2](https://img.shields.io/github/license/tstibbs/Leaflet.BoxSelector)](LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/tstibbs/Leaflet.BoxSelector.svg)](https://github.com/tstibbs/Leaflet.BoxSelector/issues)
+
 ## What is this?
 
 This is a simple leaflet control that allows you to draw a box to select a number of markers. It then allows you to perform an action on those markers (e.g. export to file). This control is heavily influenced by the built-in box-zoom (shift + click and drag draws a box and then zooms to it) so the selection area looks very similar.

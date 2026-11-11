@@ -17,27 +17,29 @@ Requires leaflet 1.6.0 to work with touch devices.
 
 A built in action that just displays the markers in an 'alert' popup is registered for testing purposes, so to get started all you need to do is add the control:
 ```
-(new L.Control.BoxSelector()).addTo(map);
+import { BoxSelector } from 'leaflet-box-selector';
+
+(new BoxSelector()).addTo(map);
 ```
 
 If you want to register any additional actions, add them to `options.actions` like this:
 ```
+import { BoxSelector, displayCoords, gpx } from 'leaflet-box-selector';
+
 var options = {
 	actions: {
 		alert: {
 			display: "Display selected coords",
-			action:	L.Control.BoxSelector.Actions.alert()
+			action: displayCoords
 		},
 		GPX: {
 			display: "Export to GPX",
-			action: L.Control.BoxSelector.Actions.gpx('points.gpx')
+			action: gpx('points.gpx')
 		}
 	}
 };
-(new L.Control.BoxSelector(options)).addTo(map);
+(new BoxSelector(options)).addTo(map);
 ```
-
-Note that the `alert` and `gpx` actions are created via factory functions which return the action functions.
 
 ### Adding custom actions
 

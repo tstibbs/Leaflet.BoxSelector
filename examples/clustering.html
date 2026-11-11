@@ -5,21 +5,24 @@
 	<meta charset="utf-8" />
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+	
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
 	<link rel="stylesheet" href="../src/selector.css" />
 	
-	<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet-src.js"></script>
-	<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster-src.js"></script>
-	<script src="https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js"></script>
-	
-	<script src="../src/selector.js"></script>
-	<script src="../src/gpx.js"></script>
+	<script type="importmap">
+	{
+	  "imports": {
+	    "file-saver": "https://esm.sh/file-saver@2.0.5",
+	    "leaflet": "https://esm.sh/leaflet@1.9.4",
+	    "leaflet.markercluster": "https://esm.sh/leaflet.markercluster@1.4.1"
+	  }
+	}
+	</script>
 </head>
 <body style="margin: 0">
 	<div id="map" style="width: 100%; height: 100%; position: absolute"></div>
-	<script src="clustering.js"></script>
+	<script type="module" src="./clustering.js"></script>
 </body>
 </html>

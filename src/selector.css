@@ -20,7 +20,7 @@
 }
 
 #boxselector-icon div.icon {
-    background-image: url("select-icon.png");
+    background-image: url("./select-icon.png");
     width: 18px;
     height: 18px;
 }

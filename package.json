@@ -1,6 +1,16 @@
 {
     "name": "leaflet-box-selector",
     "version": "0.0.1",
+    "type": "module",
     "license": "Apache-2.0",
-    "main": "src/selector.js"
+    "main": "./src/index.js",
+    "peerDependencies": {
+        "leaflet": "1.9.4"
+    },
+    "dependencies": {
+        "file-saver": "^2.0.5"
+    },
+    "devDependencies": {
+        "leaflet.markercluster": "^1.5.3"
+    }
 }

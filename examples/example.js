@@ -1,3 +1,5 @@
+import { BoxSelector, displayCoords, gpx } from '../src/index.js';
+
 var group = new L.LayerGroup();
 
 var markers = {
@@ -32,12 +34,12 @@ var options = {
 	actions: {
 		alert: {
 			display: "Display selected coords",
-			action:	L.Control.BoxSelector.Actions.alert()
+			action: displayCoords
 		},
 		GPX: {
 			display: "Export to GPX",
-			action: L.Control.BoxSelector.Actions.gpx('points.gpx')
+			action: gpx('points.gpx')
 		}
 	}
 };
-(new L.Control.BoxSelector(options)).addTo(map);
+(new BoxSelector(options)).addTo(map);

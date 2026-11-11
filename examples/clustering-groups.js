@@ -1,3 +1,7 @@
+import { BoxSelector, displayCoords, gpx } from '../src/index.js';
+import 'leaflet.markercluster'
+import 'leaflet.featuregroup.subgroup'
+
 var parentGroup = new L.MarkerClusterGroup();
 
 var markers1 = {
@@ -50,13 +54,13 @@ var options = {
 	actions: {
 		alert: {
 			display: "Display selected coords",
-			action:	L.Control.BoxSelector.Actions.alert()
+			action: displayCoords
 		},
 		GPX: {
 			display: "Export to GPX",
-			action: L.Control.BoxSelector.Actions.gpx('points.gpx')
+			action: gpx('points.gpx')
 		}
 	},
 	highlightOnDrag: false
 };
-(new L.Control.BoxSelector(options)).addTo(map);
+(new BoxSelector(options)).addTo(map);

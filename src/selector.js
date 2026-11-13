@@ -209,6 +209,8 @@ export const BoxSelector = L.Control.extend({
         this._toggleElement = L.DomUtil.create('a', 'boxselector-icon', this._buttonBar);
         this._toggleElement.id = 'boxselector-icon';
         this._toggleElement.href = '#';
+        this._toggleElement.title = 'Toggle marker selection';
+        this._toggleElement['aria-label'] = this._toggleElement.title
         var iconWrapper = L.DomUtil.create('div', 'icon-wrapper', this._toggleElement);
         L.DomUtil.create('div', 'icon', iconWrapper);
 
@@ -216,6 +218,8 @@ export const BoxSelector = L.Control.extend({
         var dropdownButton = L.DomUtil.create('a', 'boxselector-dropdown-button', this._buttonBar);
         dropdownButton.id = 'boxselector-dropdown-button';
         dropdownButton.href = '#';
+        dropdownButton.title = 'Choose action for seleted markers';
+        dropdownButton['aria-label'] = dropdownButton.title
         var dropdownIconWrapper = L.DomUtil.create('div', 'boxselector-dropdown-icon-wrapper', dropdownButton);
         L.DomUtil.create('div', 'boxselector-dropdown-icon', dropdownIconWrapper);
         L.DomEvent.on(dropdownButton, 'click', this._expandCollapse, this);
